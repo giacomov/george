@@ -5,4 +5,4 @@ COPY whisper.cpp /whisper
 
 WORKDIR /whisper
 
-RUN find . && make stream
+RUN cd /whisper && find . && make stream
