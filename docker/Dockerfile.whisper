@@ -9,6 +9,9 @@ WORKDIR /whisper
 RUN apt-get update && \
     apt-get install -y libsdl2-dev
 
+# Copy our version of stream.cpp
+COPY whisper.custom/stream.cpp /whisper/examples/stream/stream.cpp
+
 # Build whisper
 RUN cd /whisper && \
     make clean && \
