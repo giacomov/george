@@ -5,7 +5,10 @@ COPY ./whisper.cpp /whisper
 
 WORKDIR /whisper
 
+# Install pre-requisite
+RUN apt-get update && \
+    apt-get install -y libsdl2-dev
+
 RUN cd /whisper && \
     make clean && \
-    apt-get install -y libsdl2-dev && \
     WHISPER_CUBLAS=1 make -j stream
