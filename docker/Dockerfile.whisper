@@ -18,7 +18,8 @@ RUN cd /whisper && \
 RUN bash ./models/download-ggml-model.sh tiny.en
 
 # Build ROS2 node
-RUN ros2 pkg create --build-type ament_python voice_commands
+RUN source /opt/ros/eloquent/setup.bash && \
+    ros2 pkg create --build-type ament_python voice_commands
 COPY whisper.node/stream_listener.py /whisper/voice_commands/stream_listener.py
 
 
