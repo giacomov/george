@@ -18,10 +18,11 @@ RUN cd /whisper && \
 RUN bash ./models/download-ggml-model.sh tiny.en
 
 # Build ROS2 node
-RUN source /opt/ros/eloquent/setup.bash && \
-    ros2 pkg create --build-type ament_python voice_commands
-COPY whisper.node/stream_listener.py /whisper/voice_commands/stream_listener.py
-
+COPY whisper.node/voice_commands /whisper/voice_commands
+RUN cd /whisper/voice_commands && \
+    source /opt/ros/eloquent/setup.bash && \
+    colcon build && \
+    . install/setup.bash
 
 # Second stage
 FROM dustynv/jetbot_ros:eloquent-r32.5.0
@@ -30,4 +31,6 @@ RUN mkdir -p /whisper/models
 COPY --from=build /whisper/stream /whisper/stream
 COPY --from=build /whisper/models/* /whisper/models/
 
-RUN /whisper/stream -h
+RUN source /opt/ros/eloquent/setup.bash && \
+    ros2 run voice_commands stream_listener
+
