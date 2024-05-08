@@ -1,6 +1,12 @@
 version: '3.3'
 
 services:
+  
+  whisper:
+    build:
+      context: ../whisper.cpp
+    command: /whisper/stream
+
   talker:
     build:
       context: .
@@ -11,6 +17,7 @@ services:
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_LOCALHOST_ONLY=0
+  
   listener:
     build:
       context: .
@@ -23,13 +30,14 @@ services:
       - ROS_LOCALHOST_ONLY=0
     depends_on:
       - talker
-  doctor:
+  
+  check:
     build:
       context: .
       dockerfile: Dockerfile.ros2
     # platform: linux/arm64
     # network_mode: host
-    command: bash -c "source /opt/ros/eloquent/setup.bash && while sleep 10; do echo doctor ; ros2 node list; done"
+    command: bash -c "source /opt/ros/eloquent/setup.bash && while sleep 10; do echo Node list ; ros2 node list; done"
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_LOCALHOST_ONLY=0
