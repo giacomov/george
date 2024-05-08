@@ -4,8 +4,8 @@ services:
   
   whisper:
     build:
-      context: ../whisper.cpp
-      dockerfile: Dockerfile.whisper
+      context: ..
+      dockerfile: docker/Dockerfile.whisper
     command: /whisper/stream
 
   talker:
