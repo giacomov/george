@@ -6,7 +6,7 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile.whisper
-    command: /whisper/stream -c 10 -m /whisper/models/ggml-tiny.en.bin --step 0 --keep 0 --audio-ctx 0
+    command: /whisper/stream -c 10 -m /whisper/models/ggml-tiny.en.bin --step 0 --length 3000
     devices:
       - /dev/snd:/dev/snd
 
