@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  talker:
+    image: dustynv/jetbot_ros:eloquent-r32.5.0
+    command: ros2 run demo_nodes_cpp talker
+    platform: linux/arm64
+  listener:
+    image: dustynv/jetbot_ros:eloquent-r32.5.0
+    command: ros2 run demo_nodes_cpp listener
+    platform: linux/arm64
+    depends_on:
+      - talker
