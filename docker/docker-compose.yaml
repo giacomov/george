@@ -1,13 +1,52 @@
-version: '2'
+version: '3.9'
 
 services:
   talker:
-    image: dustynv/jetbot_ros:eloquent-r32.5.0
-    command: ros2 run demo_nodes_cpp talker
+    build:
+      context: .
+      dockerfile: Dockerfile.ros2
     platform: linux/arm64
+    # network_mode: host
+    command: bash -c "source /opt/ros/eloquent/setup.bash && ros2 run demo_nodes_cpp talker"
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_LOCALHOST_ONLY=0
   listener:
-    image: dustynv/jetbot_ros:eloquent-r32.5.0
-    command: ros2 run demo_nodes_cpp listener
+    build:
+      context: .
+      dockerfile: Dockerfile.ros2
     platform: linux/arm64
+    # network_mode: host
+    command: bash -c "source /opt/ros/eloquent/setup.bash && sleep 10 && echo ACTIVE && ros2 run demo_nodes_cpp listener"
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_LOCALHOST_ONLY=0
     depends_on:
       - talker
+  doctor:
+    build:
+      context: .
+      dockerfile: Dockerfile.ros2
+    platform: linux/arm64
+    # network_mode: host
+    command: bash -c "source /opt/ros/eloquent/setup.bash && while sleep 10; do echo doctor ; ros2 node list; done"
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_LOCALHOST_ONLY=0
+      - TERM=xterm
+    depends_on:
+      - talker
+      - listener
+# version: '2'
+
+# services:
+#   talker:
+#     image: dustynv/jetbot_ros:eloquent-r32.5.0
+#     command: ros2 run demo_nodes_cpp talker
+#     platform: linux/arm64
+#   listener:
+#     image: dustynv/jetbot_ros:eloquent-r32.5.0
+#     command: ros2 run demo_nodes_cpp listener
+#     platform: linux/arm64
+#     depends_on:
+#       - talker
