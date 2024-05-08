@@ -7,4 +7,5 @@ WORKDIR /whisper
 
 RUN cd /whisper && \
     make clean && \
+    apt-get install -y libsdl2-dev && \
     WHISPER_CUBLAS=1 make -j stream
