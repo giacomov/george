@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.6-py3
+FROM nvcr.io/nvidia/l4t-pytorch:r32.5.0-pth1.6-py3 AS build
 
 # Build whisper
 COPY ./whisper.cpp /whisper
@@ -9,9 +9,19 @@ WORKDIR /whisper
 RUN apt-get update && \
     apt-get install -y libsdl2-dev
 
+# Build whisper
 RUN cd /whisper && \
     make clean && \
     WHISPER_CUBLAS=1 make -j stream
 
 # Download model
 RUN bash ./models/download-ggml-model.sh tiny.en
+
+# Second stage
+FROM dustynv/jetbot_ros:eloquent-r32.5.0
+
+RUN mkdir -p /whisper/models
+COPY --from=build /whisper/stream /whisper/stream
+COPY --from=build /whisper/models/* /whisper/models/
+
+RUN /whisper/stream -h
