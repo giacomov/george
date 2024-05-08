@@ -5,4 +5,4 @@ COPY ./whisper.cpp /whisper
 
 WORKDIR /whisper
 
-RUN cd /whisper && find . && make stream
+RUN cd /whisper && find . && WHISPER_CUDA=1 make -j stream
