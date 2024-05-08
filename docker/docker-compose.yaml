@@ -6,7 +6,7 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile.whisper
-    command: /whisper/streamcat 
+    command: /whisper/stream 
     devices:
       - /dev/snd:/dev/snd
 
