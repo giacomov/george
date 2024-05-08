@@ -12,3 +12,6 @@ RUN apt-get update && \
 RUN cd /whisper && \
     make clean && \
     WHISPER_CUBLAS=1 make -j stream
+
+# Download model
+RUN bash ./models/download-ggml-model.sh tiny.en
