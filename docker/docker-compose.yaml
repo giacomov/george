@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.ros2
-    platform: linux/arm64
+    # platform: linux/arm64
     # network_mode: host
     command: bash -c "source /opt/ros/eloquent/setup.bash && ros2 run demo_nodes_cpp talker"
     environment:
@@ -15,7 +15,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.ros2
-    platform: linux/arm64
+    # platform: linux/arm64
     # network_mode: host
     command: bash -c "source /opt/ros/eloquent/setup.bash && sleep 10 && echo ACTIVE && ros2 run demo_nodes_cpp listener"
     environment:
@@ -27,7 +27,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.ros2
-    platform: linux/arm64
+    # platform: linux/arm64
     # network_mode: host
     command: bash -c "source /opt/ros/eloquent/setup.bash && while sleep 10; do echo doctor ; ros2 node list; done"
     environment:
