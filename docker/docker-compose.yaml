@@ -5,8 +5,8 @@ services:
   whisper:
     build:
       context: ..
-      dockerfile: docker/Dockerfile.whisper
-    command: /whisper/stream -c 10 -m /whisper/models/ggml-tiny.en.bin --step 0 --length 3000
+      dockerfile: docker/Dockerfile.whisper    
+    command: bash -c "source /opt/ros/eloquent/setup.bash && source /whisper/voice_commands/install/setup.bash && /whisper/stream -c 10 -m /whisper/models/ggml-tiny.en.bin --step 0 --length 3000"
     devices:
       - /dev/snd:/dev/snd
 

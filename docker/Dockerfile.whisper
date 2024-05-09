@@ -30,7 +30,3 @@ RUN mkdir -p /whisper/models
 COPY --from=build /whisper/stream /whisper/stream
 COPY --from=build /whisper/models/* /whisper/models/
 COPY --from=build /whisper/voice_commands/install /whisper/voice_commands/install
-
-RUN source /opt/ros/eloquent/setup.bash && \
-    source /whisper/voice_commands/install/setup.bash && \
-    ros2 run voice_commands stream_listener
