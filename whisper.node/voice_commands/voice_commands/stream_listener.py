@@ -16,7 +16,10 @@ class StreamListener(Node):
                 '-m', '/whisper/models/ggml-tiny.en.bin', 
                 '--step', '0', 
                 '--length', '3000'
-            ], stdout=subprocess.PIPE)
+            ], 
+            stdout=subprocess.PIPE, 
+            universal_newlines=True  # This is needed to get a string instead of bytes
+        )
 
     def listen_stream(self):
         line = self.process.stdout.readline()
