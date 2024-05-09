@@ -2,13 +2,13 @@ version: '3.3'
 
 services:
   
-  base:
-    build:
-      context: .
-      dockerfile: Dockerfile.ros2
-    # platform: linux/arm64
-    # network_mode: host
-    command: bash -c "source /opt/ros/eloquent/setup.bash && sleep 10 && echo Topic list && ros2 topic list && echo Node list && ros2 node list && sleep 86400"
+  # base:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.ros2
+  #   # platform: linux/arm64
+  #   # network_mode: host
+  #   command: bash -c "source /opt/ros/eloquent/setup.bash && sleep 10 && echo Topic list && ros2 topic list && echo Node list && ros2 node list && sleep 86400"
 
   whisper:
     build:
