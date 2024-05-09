@@ -23,8 +23,8 @@ services:
   
   listener:
     build:
-      context: .
-      dockerfile: Dockerfile.navigation
+      context: ..
+      dockerfile: docker/Dockerfile.navigation
     # platform: linux/arm64
     # network_mode: host
     command: bash -c "source /opt/ros/eloquent/setup.bash && source /navigation/navigation/install/setup.bash && ros2 run navigation interpreter"
