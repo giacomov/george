@@ -1,6 +1,7 @@
 FROM docker_base:latest
 
 USER root
+SHELL ["/bin/bash", "-c"]
 
 # Build ROS2 node
 COPY navigation.node/navigation /navigation/navigation
