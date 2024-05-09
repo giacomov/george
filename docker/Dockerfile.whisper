@@ -22,6 +22,7 @@ COPY whisper.node/voice_commands /whisper/voice_commands
 RUN cd /whisper/voice_commands && \
     source /opt/ros/eloquent/setup.bash && \
     colcon build && \
+    cat install/setup.bash && \
     . install/setup.bash
 
 # Second stage
