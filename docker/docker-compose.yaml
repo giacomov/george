@@ -32,7 +32,7 @@ services:
       - ROS_DOMAIN_ID=0
       - ROS_LOCALHOST_ONLY=0
     depends_on:
-      - talker
+      - whisper
   
   check:
     build:
