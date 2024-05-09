@@ -28,6 +28,7 @@ class Interpreter(Node):
         )
 
         self.get_logger().info('Interpreter node started')
+        print("HEY")
         
     def callback(self, msg):
         
