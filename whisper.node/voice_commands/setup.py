@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'voice_commands = voice_commands.stream_listener:main',
+            'stream_listener = voice_commands.stream_listener:main',
         ],
     },
 )
