@@ -29,6 +29,8 @@ class StreamListener(Node):
                 message = match.group(1)
                 self.publisher_.publish(String(data=message))
                 self.get_logger().info('Publishing: "%s"' % message)
+            else:
+                self.get_logger().info('No match: "%s"' % line)
 
 def main(args=None):
     rclpy.init(args=args)
