@@ -36,7 +36,7 @@ services:
 
   navigation:
     build:
-      context: .
+      context: ..
       dockerfile: Dockerfile.navigation
     # platform: linux/arm64
     # network_mode: host
