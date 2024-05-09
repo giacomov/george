@@ -10,16 +10,16 @@ services:
     devices:
       - /dev/snd:/dev/snd
 
-  talker:
-    build:
-      context: .
-      dockerfile: Dockerfile.ros2
-    # platform: linux/arm64
-    # network_mode: host
-    command: bash -c "source /opt/ros/eloquent/setup.bash && ros2 run demo_nodes_cpp talker"
-    environment:
-      - ROS_DOMAIN_ID=0
-      - ROS_LOCALHOST_ONLY=0
+  # talker:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.ros2
+  #   # platform: linux/arm64
+  #   # network_mode: host
+  #   command: bash -c "source /opt/ros/eloquent/setup.bash && ros2 run demo_nodes_cpp talker"
+  #   environment:
+  #     - ROS_DOMAIN_ID=0
+  #     - ROS_LOCALHOST_ONLY=0
   
   listener:
     build:

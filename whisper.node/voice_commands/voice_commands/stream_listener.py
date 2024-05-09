@@ -7,7 +7,7 @@ import re
 class StreamListener(Node):
     def __init__(self):
         super().__init__('stream_listener')
-        self.publisher_ = self.create_publisher(String, 'voice_commands', 10)
+        self.publisher_ = self.create_publisher(String, 'chatter', 10)
         self.timer = self.create_timer(0.1, self.listen_stream)  # Timer to check the stream
         self.process = subprocess.Popen(
             [
