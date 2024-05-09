@@ -5,16 +5,19 @@ import subprocess
 import re
 
 class StreamListener(Node):
-    def __init__(self, topic_name='chatter'):
+
+    def __init__(self, topic_name='voice_commands'):
         super().__init__('stream_listener')
 
-        self.get_logger().info('Stream Listener node started')
+        self._logger = self.create_publisher(String, "chatter", 100)
 
-        self.get_logger().info(f'Publishing to topic {topic_name}')
+        self.log('Stream Listener node started')
+
+        self.log(f'Publishing to topic {topic_name}')
         self.publisher_ = self.create_publisher(String, topic_name, 10)
         self.timer = self.create_timer(0.1, self.listen_stream)  # Timer to check the stream
 
-        self.get_logger().info('Running whisper stream')
+        self.log('Running whisper stream')
         self.process = subprocess.Popen(
             [
                 '/whisper/stream', 
@@ -26,20 +29,23 @@ class StreamListener(Node):
             stdout=subprocess.PIPE, 
             universal_newlines=True  # This is needed to get a string instead of bytes
         )
+    
+    def log(self, msg):
+        self._logger.publish(String(data=msg))
 
     def listen_stream(self):
-        self.get_logger().info('Checking stream')
+        self.log('Checking stream')
         line = self.process.stdout.readline()
         if line:
             match = re.search(r'\[\d\d:\d\d\.\d\d\d --> \d\d:\d\d\.\d\d\d\]\s+(.*)', line)
             if match:
                 message = match.group(1)
                 self.publisher_.publish(String(data=message))
-                self.get_logger().info('Publishing: "%s"' % message)
+                self.log('Publishing: "%s"' % message)
             else:
-                self.get_logger().info('No match: "%s"' % line)
+                self.log('No match: "%s"' % line)
         else:
-            self.get_logger().info('No line received from stream')
+            self.log('No line received from stream')
 
 def main(args=None):
     rclpy.init(args=args)

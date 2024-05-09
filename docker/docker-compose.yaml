@@ -2,6 +2,17 @@ version: '3.3'
 
 services:
   
+  logger:
+    build:
+      context: .
+      dockerfile: Dockerfile.ros2
+    # platform: linux/arm64
+    # network_mode: host
+    command: bash -c "source /opt/ros/eloquent/setup.bash && ros2 run demo_nodes_cpp listener"
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_LOCALHOST_ONLY=0
+  
   whisper:
     build:
       context: ..
@@ -9,6 +20,8 @@ services:
     command: bash -c "source /opt/ros/eloquent/setup.bash && source /whisper/voice_commands/install/setup.bash && ros2 run voice_commands stream_listener"
     devices:
       - /dev/snd:/dev/snd
+    depends_on:
+      - logger
 
   # talker:
   #   build:
@@ -20,8 +33,8 @@ services:
   #   environment:
   #     - ROS_DOMAIN_ID=0
   #     - ROS_LOCALHOST_ONLY=0
-  
-  listener:
+
+  navigation:
     build:
       context: .
       dockerfile: Dockerfile.navigation

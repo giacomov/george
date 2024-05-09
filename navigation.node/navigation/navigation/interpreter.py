@@ -20,31 +20,35 @@ class Interpreter(Node):
         
         super().__init__('interpreter')
 
+        self._logger = self.create_publisher(String, "chatter", 100)
+
         self.subscription = self.create_subscription(
             String,
-            'chatter',
+            'voice_commands',
             self.callback,
             10
         )
 
-        self.get_logger().info('Interpreter node started')
-        print("HEY")
-        
+        self.log('Interpreter node started')
+    
+    def log(self, msg):
+        self._logger.publish(String(data=msg))
+
     def callback(self, msg):
         
-        self.get_logger().info(f'Received: {msg.data}')
+        self.log(f'Received: {msg.data}')
         
         for cmd in _RECOGNIZED_COMMANDS:
 
             if cmd in msg.data:
             
-                self.get_logger().info(f"Executing: {cmd}")
+                self.log(f"Executing: {cmd}")
             
                 break
         
         else:
 
-            self.get_logger().info("Command not recognized")
+            self.log("Command not recognized")
 
 
 def main(args=None):
