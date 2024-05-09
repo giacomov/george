@@ -35,7 +35,7 @@ class StreamListener(Node):
         self._logger.publish(String(data=msg))
 
     def listen_stream(self):
-        self.log('Checking stream')
+        
         line = self.process.stdout.readline()
         if line:
             match = re.search(r'\[\d\d:\d\d\.\d\d\d --> \d\d:\d\d\.\d\d\d\]\s+(.*)', line)
@@ -43,8 +43,6 @@ class StreamListener(Node):
                 message = match.group(1)
                 self.publisher_.publish(String(data=message))
                 self.log('Publishing: "%s"' % message)
-            else:
-                self.log('No match: "%s"' % line)
         else:
             self.log('No line received from stream')
 
