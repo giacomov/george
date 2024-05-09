@@ -26,7 +26,8 @@ class StreamListener(Node):
                 '--step', '0', 
                 '--length', '3000'
             ], 
-            stdout=subprocess.PIPE, 
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             universal_newlines=True  # This is needed to get a string instead of bytes
         )
     
