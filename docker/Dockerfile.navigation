@@ -1,0 +1,18 @@
+FROM jetbot/jetbot:jupyter-0.4.3-32.5.0
+
+USER root
+
+COPY install_ros2.sh /install_ros2.sh
+RUN bash /install_ros2.sh
+
+# This is useful for debugging
+RUN apt install -y ros-eloquent-demo-nodes-cpp ros-eloquent-demo-nodes-py
+
+ENV ROS_DOMAIN_ID=0
+ENV ROS_LOCALHOST_ONLY=0
+
+# Build ROS2 node
+COPY navigation.node/navigation /navigation/navigation
+RUN cd /navigation/navigation && \
+    source /opt/ros/eloquent/setup.bash && \
+    colcon build

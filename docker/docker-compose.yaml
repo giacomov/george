@@ -24,13 +24,10 @@ services:
   listener:
     build:
       context: .
-      dockerfile: Dockerfile.ros2
+      dockerfile: Dockerfile.navigation
     # platform: linux/arm64
     # network_mode: host
-    command: bash -c "source /opt/ros/eloquent/setup.bash && sleep 10 && echo ACTIVE && ros2 run demo_nodes_cpp listener"
-    environment:
-      - ROS_DOMAIN_ID=0
-      - ROS_LOCALHOST_ONLY=0
+    command: bash -c "source /opt/ros/eloquent/setup.bash && source /navigation/navigation/install/setup.bash && ros2 run navigation interpreter"
     depends_on:
       - whisper
   
