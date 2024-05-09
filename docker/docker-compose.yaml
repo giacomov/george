@@ -46,7 +46,7 @@ services:
       - ROS_LOCALHOST_ONLY=0
       - TERM=xterm
     depends_on:
-      - talker
+      - whisper
       - listener
 # version: '2'
 
