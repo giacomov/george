@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile.ros2
     # platform: linux/arm64
     # network_mode: host
-    command: bash -c "source /opt/ros/eloquent/setup.bash && while sleep 10; do echo Topic list ; ros2 topic list; done"
+    command: bash -c "source /opt/ros/eloquent/setup.bash && while sleep 10; do echo Topic list ; ros2 topic list; do echo Node list ; ros2 node list;done"
 
   whisper:
     build:
