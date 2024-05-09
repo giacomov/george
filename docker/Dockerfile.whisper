@@ -21,9 +21,7 @@ RUN bash ./models/download-ggml-model.sh tiny.en
 COPY whisper.node/voice_commands /whisper/voice_commands
 RUN cd /whisper/voice_commands && \
     source /opt/ros/eloquent/setup.bash && \
-    colcon build && \
-    cat install/setup.bash && \
-    . install/setup.bash
+    colcon build --symlink-install
 
 # Second stage
 FROM dustynv/jetbot_ros:eloquent-r32.5.0
@@ -31,7 +29,8 @@ FROM dustynv/jetbot_ros:eloquent-r32.5.0
 RUN mkdir -p /whisper/models
 COPY --from=build /whisper/stream /whisper/stream
 COPY --from=build /whisper/models/* /whisper/models/
+COPY --from=build /whisper/voice_commands/install /whisper/voice_commands/install
 
 RUN source /opt/ros/eloquent/setup.bash && \
+    source /whisper/install/setup.bash && \
     ros2 run voice_commands stream_listener
-
