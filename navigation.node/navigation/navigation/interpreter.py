@@ -46,9 +46,9 @@ class Interpreter(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    stream_listener = StreamListener()
-    rclpy.spin(stream_listener)
-    stream_listener.destroy_node()
+    interpreter = Interpreter()
+    rclpy.spin(interpreter)
+    interpreter.destroy_node()
     rclpy.shutdown()
 
 if __name__ == '__main__':
