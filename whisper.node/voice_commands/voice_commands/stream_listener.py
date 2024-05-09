@@ -5,10 +5,16 @@ import subprocess
 import re
 
 class StreamListener(Node):
-    def __init__(self):
+    def __init__(self, topic_name='chatter'):
         super().__init__('stream_listener')
-        self.publisher_ = self.create_publisher(String, 'chatter', 10)
+
+        self.get_logger().info('Stream Listener node started')
+
+        self.get_logger().info(f'Publishing to topic {topic_name}')
+        self.publisher_ = self.create_publisher(String, topic_name, 10)
         self.timer = self.create_timer(0.1, self.listen_stream)  # Timer to check the stream
+
+        self.get_logger().info('Running whisper stream')
         self.process = subprocess.Popen(
             [
                 '/whisper/stream', 
@@ -22,6 +28,7 @@ class StreamListener(Node):
         )
 
     def listen_stream(self):
+        self.get_logger().info('Checking stream')
         line = self.process.stdout.readline()
         if line:
             match = re.search(r'\[\d\d:\d\d\.\d\d\d --> \d\d:\d\d\.\d\d\d\]\s+(.*)', line)
@@ -31,6 +38,8 @@ class StreamListener(Node):
                 self.get_logger().info('Publishing: "%s"' % message)
             else:
                 self.get_logger().info('No match: "%s"' % line)
+        else:
+            self.get_logger().info('No line received from stream')
 
 def main(args=None):
     rclpy.init(args=args)
