@@ -1,4 +1,4 @@
-FROM base
+FROM docker_base:latest
 
 USER root
 
