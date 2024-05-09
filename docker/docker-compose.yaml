@@ -34,30 +34,18 @@ services:
     depends_on:
       - whisper
   
-  check:
-    build:
-      context: .
-      dockerfile: Dockerfile.ros2
-    # platform: linux/arm64
-    # network_mode: host
-    command: bash -c "source /opt/ros/eloquent/setup.bash && while sleep 10; do echo Topic list ; ros2 topic list; done"
-    environment:
-      - ROS_DOMAIN_ID=0
-      - ROS_LOCALHOST_ONLY=0
-      - TERM=xterm
-    depends_on:
-      - whisper
-      - listener
-# version: '2'
+  # check:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.ros2
+  #   # platform: linux/arm64
+  #   # network_mode: host
+  #   command: bash -c "source /opt/ros/eloquent/setup.bash && while sleep 10; do echo Topic list ; ros2 topic list; done"
+  #   environment:
+  #     - ROS_DOMAIN_ID=0
+  #     - ROS_LOCALHOST_ONLY=0
+  #     - TERM=xterm
+  #   depends_on:
+  #     - whisper
+  #     - listener
 
-# services:
-#   talker:
-#     image: dustynv/jetbot_ros:eloquent-r32.5.0
-#     command: ros2 run demo_nodes_cpp talker
-#     platform: linux/arm64
-#   listener:
-#     image: dustynv/jetbot_ros:eloquent-r32.5.0
-#     command: ros2 run demo_nodes_cpp listener
-#     platform: linux/arm64
-#     depends_on:
-#       - talker
