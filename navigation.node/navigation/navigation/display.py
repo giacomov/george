@@ -112,8 +112,8 @@ class Display:
 
         # Animate text moving in sine wave.
         pos = startpos
-        n_repetitions = 1
-        for _ in range(n_repetitions+1):
+
+        while True:
             # Clear image buffer by drawing a black filled box.
             draw.rectangle((0,0,width,height), outline=0, fill=0)
             # Enumerate characters and draw them offset vertically based on a sine wave.
@@ -126,7 +126,10 @@ class Display:
                 if x < -10:
                     char_width, _ = draw.textsize(c, font=font)
                     x += char_width
-                    continue
+
+                    self._clear()
+                    return
+
                 # Calculate offset from sine wave.
                 y = offset+math.floor(amplitude*math.sin(x/float(width)*2.0*math.pi))
                 # Draw text.
