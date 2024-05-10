@@ -23,4 +23,5 @@ setup(
             'interpreter = navigation.interpreter:main',
         ],
     },
+    package_data={package_name: ['resources/*']},
 )
