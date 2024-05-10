@@ -12,7 +12,7 @@ RUN apt-get update && \
 # Build whisper
 RUN cd /whisper && \
     make clean && \
-    WHISPER_CUBLAS=1 CC=nvcc CXX=nvcc NVFLAGS="-Xcompiler -ansi -Xcompiler -Ofast" make -j stream
+    WHISPER_CUBLAS=1 NVFLAGS="-Xcompiler -ansi -Xcompiler -Ofast" make -j stream
 
 # Download model
 RUN bash ./models/download-ggml-model.sh base.en
