@@ -126,9 +126,7 @@ class Display:
                 if x < -10:
                     char_width, _ = draw.textsize(c, font=font)
                     x += char_width
-
-                    self._clear()
-                    return
+                    continue
 
                 # Calculate offset from sine wave.
                 y = offset+math.floor(amplitude*math.sin(x/float(width)*2.0*math.pi))
@@ -142,10 +140,9 @@ class Display:
             self._disp.display()
             # Move position for next frame.
             pos += velocity
-            # Start over if text has scrolled completely off left side of screen.
+            # Return if off the left side of screen.
             if pos < -maxwidth:
                 pos = startpos
-            # Pause briefly before drawing next frame.
-            #time.sleep(0.1)
-        
-        self._clear()
+                
+                self._clear()
+                return
