@@ -41,6 +41,7 @@ class Interpreter(Node):
     def callback(self, msg):
         
         self.log(f'Received: {msg.data}')
+        self._display.display_text(f"{msg.data}")
         
         for action in self._available_actions:
 
@@ -55,6 +56,7 @@ class Interpreter(Node):
         else:
 
             self.log(f"Action not recognized. Available actions: {self._available_actions}")
+            self._display.display_text("??")
 
 
 def main(args=None):
