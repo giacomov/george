@@ -47,7 +47,7 @@ class Display:
         # Create a little animation to welcome the user
         # The image is displayed in 5 steps, each step is displayed for 0.5 seconds
         # In the first step the image is 10% of its size, in the last step it is 100% of its size
-        for scale in range(0.1, 1.1, 0.1):
+        for scale in [0.1, 0.35, 0.6, 0.85, 1.0]:
             # Resize the image
             image = (
                 Image
