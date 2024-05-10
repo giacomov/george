@@ -39,8 +39,10 @@ class StreamListener(Node):
         line = self.process.stdout.readline()
         
         if line:
-        
-            match = re.search(r'\[\d\d:\d\d\.\d\d\d --> \d\d:\d\d\.\d\d\d\]\s+(.*)', line)
+
+            self.log(line)
+
+            match = re.search(r'\[\d\d:\d\d\.\d\d\d --> \d\d:\d\d\.\d\d\d\]\s+(.*)', line.strip())
         
             if match:
                 
