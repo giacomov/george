@@ -8,6 +8,7 @@ import math
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+from PIL import ImageOps
 from jetbot.utils.utils import get_ip_address
 
 
@@ -52,10 +53,16 @@ class Display:
         # The image is displayed in 5 steps, each step is displayed for 0.5 seconds
         # In the first step the image is 10% of its size, in the last step it is 100% of its size
         for scale in [0.1, 0.35, 0.6, 0.85, 1.0]:
+
+            # Open image
+            image = Image.open(image_path)
+
+            # Invert colors
+            image = ImageOps.invert(image)
+
             # Resize the image
             resized_image = (
-                Image
-                .open(image_path)
+                image
                 .resize(
                     (
                         int(width * scale), 
@@ -98,7 +105,7 @@ class Display:
         draw = ImageDraw.Draw(image)
 
         # Define text and get total width.
-        text = 'SSD1306 ORGANIC LED DISPLAY. THIS IS AN OLD SCHOOL DEMO SCROLLER!! GREETZ TO: LADYADA & THE ADAFRUIT CREW, TRIXTER, FUTURE CREW, AND FARBRAUSCH'
+        text = 'HELLO THERE! I AM GEORGE, A VOICE-ACTIVATED LITTLE BOT'
         maxwidth, unused = draw.textsize(text, font=font)
 
         # Set animation and sine wave parameters.
@@ -140,5 +147,5 @@ class Display:
             if pos < -maxwidth:
                 pos = startpos
             # Pause briefly before drawing next frame.
-            time.sleep(0.1)
+            #time.sleep(0.1)
 
