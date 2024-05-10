@@ -26,6 +26,10 @@ class Interpreter(Node):
         self._available_actions = Navigation.get_available_actions()
 
         self.log('Interpreter node started')
+
+        # Signal that we are ready to receive messages
+        self._navigation.execute('left')
+        self._navigation.execute('right')
     
     def log(self, msg):
         self._logger.publish(String(data=f"{self.get_name()}: {msg}"))
