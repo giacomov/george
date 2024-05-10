@@ -45,7 +45,7 @@ class Display:
         image_path = self._get_resource_path('jetbot_2.png')
 
         # Open image
-        image = Image.open(image_path).convert('1')
+        image = Image.open(image_path).resize((width, height), Image.ANTIALIAS).convert('1')
         
         self._disp.image(image)
         self._disp.display()
