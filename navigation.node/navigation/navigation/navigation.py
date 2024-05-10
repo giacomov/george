@@ -2,20 +2,18 @@ from jetbot import Robot
 import time
 
 
+# This will be used to store the actions that the robot
+# can perform using the decorator register_action
+_ACTIONS = {}
+
 # Write a decorator for the methods of the class to register
 # legal actions for the robot
 def register_action(func):
-    def wrapper(self, *args, **kwargs):
-        self._actions[func.__name__] = func
-        return func(self, *args, **kwargs)
-    return wrapper
+    _ACTIONS[func.__name__] = func
+    return func
 
 
 class Navigation:
-
-    # This will be used to store the actions that the robot
-    # can perform using the decorator register_action
-    _actions = {}
 
     def __init__(self, speed=0.3, move_time=0.5):
     
@@ -25,11 +23,11 @@ class Navigation:
     
     def execute(self, action):
         
-        self._actions[action](self)
+        _ACTIONS[action](self)
 
     @classmethod
     def get_available_actions(cls):
-        return list(cls._actions.keys())
+        return list(_ACTIONS.keys())
 
     @register_action
     def stop(self):
