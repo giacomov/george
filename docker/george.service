@@ -7,7 +7,7 @@ After=docker.service
 Type=simple
 Restart=always
 RestartSec=10s
-WorkingDirectory=/home/jetbot/george
+WorkingDirectory=/home/jetbot/george/docker
 ExecStart=/usr/bin/docker-compose up
 ExecStop=/usr/bin/docker-compose down
 
