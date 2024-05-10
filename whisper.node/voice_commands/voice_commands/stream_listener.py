@@ -22,7 +22,7 @@ class StreamListener(Node):
             [
                 '/whisper/stream', 
                 '-c', '10', 
-                '-m', '/whisper/models/ggml-tiny.en.bin', 
+                '-m', '/whisper/models/ggml-base.en.bin', 
                 '--step', '0', 
                 '--length', '3000'
             ], 
