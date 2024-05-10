@@ -9,6 +9,12 @@ services:
     # platform: linux/arm64
     # network_mode: host
     command: bash -c "source /opt/ros/eloquent/setup.bash && ros2 run demo_nodes_cpp listener"
+    healthcheck:
+      test: ros2 node info /listener || exit 1
+      interval: 1s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_LOCALHOST_ONLY=0
@@ -46,6 +52,7 @@ services:
       - ROS_LOCALHOST_ONLY=0
     depends_on:
       - whisper
+      - logger
   
   # check:
   #   build:
