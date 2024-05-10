@@ -97,10 +97,6 @@ class Display:
         # Load default font.
         font = ImageFont.load_default()
 
-        # Alternatively load a TTF font.  Make sure the .ttf font file is in the same directory as this python script!
-        # Some nice fonts to try: http://www.dafont.com/bitmap.php
-        # font = ImageFont.truetype('Minecraftia.ttf', 8)
-
         # Create drawing object.
         draw = ImageDraw.Draw(image)
 
@@ -111,11 +107,10 @@ class Display:
         # Set animation and sine wave parameters.
         amplitude = height/4
         offset = height/2 - 4
-        velocity = -2
+        velocity = -3
         startpos = width
 
         # Animate text moving in sine wave.
-        print('Press Ctrl-C to quit.')
         pos = startpos
         n_repetitions = 1
         for _ in range(n_repetitions):
@@ -123,13 +118,13 @@ class Display:
             draw.rectangle((0,0,width,height), outline=0, fill=0)
             # Enumerate characters and draw them offset vertically based on a sine wave.
             x = pos
-            for i, c in enumerate(text):
+            for _, c in enumerate(text):
                 # Stop drawing if off the right side of screen.
                 if x > width:
                     break
                 # Calculate width but skip drawing if off the left side of screen.
                 if x < -10:
-                    char_width, char_height = draw.textsize(c, font=font)
+                    char_width, _ = draw.textsize(c, font=font)
                     x += char_width
                     continue
                 # Calculate offset from sine wave.
@@ -137,7 +132,7 @@ class Display:
                 # Draw text.
                 draw.text((x, y), c, font=font, fill=255)
                 # Increment x position based on chacacter width.
-                char_width, char_height = draw.textsize(c, font=font)
+                char_width, _ = draw.textsize(c, font=font)
                 x += char_width
             # Draw the image buffer.
             self._disp.image(image)
@@ -149,4 +144,5 @@ class Display:
                 pos = startpos
             # Pause briefly before drawing next frame.
             #time.sleep(0.1)
-
+        
+        self._clear()
