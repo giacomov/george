@@ -3,7 +3,7 @@ from rclpy.node import Node
 from std_msgs.msg import String
 
 from .navigation import Navigation
-from .navigation import Display
+from .display import Display
 
 
 class Interpreter(Node):
