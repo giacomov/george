@@ -105,7 +105,7 @@ class Display:
         draw = ImageDraw.Draw(image)
 
         # Define text and get total width.
-        text = 'HELLO THERE! I AM GEORGE, A VOICE-ACTIVATED LITTLE BOT'
+        text = 'HELLO THERE! I AM GEORGE, A VOICE-ACTIVATED LITTLE BOT. SPEAK TO ME AND TELL ME WHAT TO DO!'
         maxwidth, unused = draw.textsize(text, font=font)
 
         # Set animation and sine wave parameters.
@@ -117,7 +117,8 @@ class Display:
         # Animate text moving in sine wave.
         print('Press Ctrl-C to quit.')
         pos = startpos
-        while True:
+        n_repetitions = 1
+        for _ in range(n_repetitions):
             # Clear image buffer by drawing a black filled box.
             draw.rectangle((0,0,width,height), outline=0, fill=0)
             # Enumerate characters and draw them offset vertically based on a sine wave.
