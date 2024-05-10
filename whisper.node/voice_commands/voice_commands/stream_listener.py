@@ -48,7 +48,7 @@ class StreamListener(Node):
                 
                 message = match.group(1)
                 
-                if message.find("BLANK_AUDIO"):
+                if message.find("BLANK_AUDIO") >= 0:
 
                     self.log('No voice detected')
                     
