@@ -1,16 +1,9 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-import subprocess
-import re
 
-_RECOGNIZED_COMMANDS = [
-    "left",
-    "right",
-    "forward",
-    "backwards",
-    "stop"
-]
+from .navigation import Navigation
+
 
 class Interpreter(Node):
     """
@@ -29,6 +22,8 @@ class Interpreter(Node):
             10
         )
 
+        self._navigation = Navigation()
+
         self.log('Interpreter node started')
     
     def log(self, msg):
@@ -38,17 +33,19 @@ class Interpreter(Node):
         
         self.log(f'Received: {msg.data}')
         
-        for cmd in _RECOGNIZED_COMMANDS:
+        for action in Navigation.get_available_actions():
 
-            if cmd in msg.data:
+            if action in msg.data:
             
-                self.log(f"Executing: {cmd}")
-            
+                self.log(f"Executing: {action}")
+
+                self._navigation.execute(action)
+
                 break
         
         else:
 
-            self.log("Command not recognized")
+            self.log("Action not recognized")
 
 
 def main(args=None):

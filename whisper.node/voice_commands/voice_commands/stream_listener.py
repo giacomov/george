@@ -37,21 +37,39 @@ class StreamListener(Node):
     def listen_stream(self):
         
         line = self.process.stdout.readline()
+        
         if line:
+        
             match = re.search(r'\[\d\d:\d\d\.\d\d\d --> \d\d:\d\d\.\d\d\d\]\s+(.*)', line)
+        
             if match:
+                
                 message = match.group(1)
-                self.publisher_.publish(String(data=message))
+                
+                if message.find("BLANK_AUDIO"):
+
+                    self.log('No voice detected')
+                    
+                    return
+                
                 self.log('Publishing: "%s"' % message)
+                self.publisher_.publish(String(data=message))
+                
         else:
             self.log('No line received from stream')
 
+
 def main(args=None):
+
     rclpy.init(args=args)
+    
     stream_listener = StreamListener()
     rclpy.spin(stream_listener)
+    
     stream_listener.destroy_node()
     rclpy.shutdown()
 
+
 if __name__ == '__main__':
+
     main()
