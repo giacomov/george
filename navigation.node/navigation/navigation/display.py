@@ -53,8 +53,10 @@ class Display:
                 Image
                 .open(image_path)
                 .resize(
-                    int(width * scale), 
-                    int(height * scale),
+                    (
+                        int(width * scale), 
+                        int(height * scale)
+                    ),
                     Image.ANTIALIAS)
                 .convert('1')
             )
