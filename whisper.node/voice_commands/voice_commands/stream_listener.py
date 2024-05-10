@@ -40,7 +40,7 @@ class StreamListener(Node):
         
         if line:
 
-            self.log(line)
+            # self.log(line)
 
             match = re.search(r'\[\d\d:\d\d\.\d\d\d --> \d\d:\d\d\.\d\d\d\]\s+(.*)', line.strip())
         
