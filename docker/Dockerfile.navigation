@@ -1,4 +1,4 @@
-FROM docker_base:latest
+FROM docker_logger:latest
 
 USER root
 SHELL ["/bin/bash", "-c"]
