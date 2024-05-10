@@ -23,6 +23,7 @@ class Interpreter(Node):
         )
 
         self._navigation = Navigation()
+        self._available_actions = Navigation.get_available_actions()
 
         self.log('Interpreter node started')
     
@@ -33,7 +34,7 @@ class Interpreter(Node):
         
         self.log(f'Received: {msg.data}')
         
-        for action in Navigation.get_available_actions():
+        for action in self._available_actions:
 
             if action in msg.data:
             
@@ -45,7 +46,7 @@ class Interpreter(Node):
         
         else:
 
-            self.log("Action not recognized")
+            self.log(f"Action not recognized. Available actions: {self._available_actions}")
 
 
 def main(args=None):
