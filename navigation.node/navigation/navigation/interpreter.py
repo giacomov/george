@@ -32,7 +32,7 @@ class Interpreter(Node):
         self.log('Interpreter node started')
     
     def log(self, msg):
-        self._logger.publish(String(data=msg))
+        self._logger.publish(String(data=f"{self.get_name()}: {msg}"))
 
     def callback(self, msg):
         
