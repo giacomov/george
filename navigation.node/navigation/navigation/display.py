@@ -44,10 +44,27 @@ class Display:
         # Figure out path of jetbot_2.png 
         image_path = self._get_resource_path('jetbot_2.png')
 
-        # Open image
-        image = Image.open(image_path).resize((width, height), Image.ANTIALIAS).convert('1')
-        
-        self._disp.image(image)
-        self._disp.display()
+        # Create a little animation to welcome the user
+        # The image is displayed in 5 steps, each step is displayed for 0.5 seconds
+        # In the first step the image is 10% of its size, in the last step it is 100% of its size
+        for scale in range(0.1, 1.1, 0.1):
+            # Resize the image
+            image = (
+                Image
+                .open(image_path)
+                .resize(
+                    int(width * scale), 
+                    int(height * scale),
+                    Image.ANTIALIAS)
+                .convert('1')
+            )
+            
+            # Pad the image to be 128x32, with the original image in the center
+            image = Image.new('1', (width, height))
+            image.paste(image, (int((width - image.width) / 2), int((height - image.height) / 2)))
+
+            self._disp.image(image)
+            self._disp.display()
+            time.sleep(0.5)
         
 
