@@ -3,6 +3,7 @@ from rclpy.node import Node
 from std_msgs.msg import String
 
 from .navigation import Navigation
+from .navigation import Display
 
 
 class Interpreter(Node):
@@ -30,6 +31,9 @@ class Interpreter(Node):
         # Signal that we are ready to receive messages
         self._navigation.execute('left')
         self._navigation.execute('right')
+
+        self._display = Display()
+        self._display.welcome()
     
     def log(self, msg):
         self._logger.publish(String(data=f"{self.get_name()}: {msg}"))
