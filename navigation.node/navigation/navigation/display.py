@@ -49,7 +49,7 @@ class Display:
         # In the first step the image is 10% of its size, in the last step it is 100% of its size
         for scale in [0.1, 0.35, 0.6, 0.85, 1.0]:
             # Resize the image
-            image = (
+            resized_image = (
                 Image
                 .open(image_path)
                 .resize(
@@ -63,7 +63,13 @@ class Display:
             
             # Pad the image to be 128x32, with the original image in the center
             image = Image.new('1', (width, height))
-            image.paste(image, (int((width - image.width) / 2), int((height - image.height) / 2)))
+            image.paste(
+                resized_image, 
+                (
+                    int((width - resized_image.width) / 2), 
+                    int((height - resized_image.height) / 2)
+                )
+            )
 
             self._disp.image(image)
             self._disp.display()
