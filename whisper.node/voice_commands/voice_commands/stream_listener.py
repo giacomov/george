@@ -57,11 +57,6 @@ class StreamListener(Node):
         
         if line:
 
-            # Pause process so we don't get any more inputs and we don't listen
-            # to the noise of the motors while a command is being executed
-            # The process will be unlocked when the interpreter node will
-            # send a message to the locks topic
-            self.log("Suspending stream")
             self._process.send_signal(subprocess.signal.SIGSTOP)
 
             match = re.search(r'\[\d\d:\d\d\.\d\d\d --> \d\d:\d\d\.\d\d\d\]\s+(.*)', line.strip())
@@ -76,6 +71,12 @@ class StreamListener(Node):
                     
                     return
                 
+                # Pause process so we don't get any more inputs and we don't listen
+                # to the noise of the motors while a command is being executed
+                # The process will be unlocked when the interpreter node will
+                # send a message to the locks topic
+                self.log("Suspending stream")
+
                 self.log('Publishing: "%s"' % message)
                 self._publisher.publish(String(data=message))
                 
