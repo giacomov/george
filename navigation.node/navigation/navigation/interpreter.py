@@ -14,7 +14,9 @@ class Interpreter(Node):
         
         super().__init__('interpreter')
 
-        self._logger = self.create_publisher(String, "chatter", 100)
+        self._logger = self.create_publisher(String, "chatter", 10)
+
+        self._locks = self.create_publisher(String, 'locks', 10)
 
         self.subscription = self.create_subscription(
             String,
@@ -39,9 +41,8 @@ class Interpreter(Node):
         self._logger.publish(String(data=f"{self.get_name()}: {msg}"))
 
     def callback(self, msg):
-        
+
         self.log(f'Received: {msg.data}')
-        self._display.display_text(f"{msg.data}")
         
         for action in self._available_actions:
 
@@ -57,6 +58,10 @@ class Interpreter(Node):
 
             self.log(f"Action not recognized. Available actions: {self._available_actions}")
             self._display.display_text("??")
+        
+        # Signal that we are ready to receive messages
+        self.log('Unlocking')
+        self._locks.publish(String(data='unlocked'))
 
 
 def main(args=None):
