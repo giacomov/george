@@ -18,6 +18,16 @@ class StreamListener(Node):
         self._publisher = self.create_publisher(String, topic_name, 10)
         self._timer = self.create_timer(0.1, self.listen_stream)  # Timer to check the stream
 
+        # Sync with the interpreter so we don't send new commands while 
+        # the current one is being executed
+        self.log(f"Listening to topic 'locks'")
+        self._subscription = self.create_subscription(
+            String,
+            'locks',
+            self.lock_callback,
+            10
+        )
+
         self.log('Running whisper stream')
         self._process = subprocess.Popen(
             [
@@ -30,15 +40,6 @@ class StreamListener(Node):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True  # This is needed to get a string instead of bytes
-        )
-
-        # Sync with the interpreter so we don't send new commands while 
-        # the current one is being executed
-        self._subscription = self.create_subscription(
-            String,
-            'locks',
-            self.lock_callback,
-            10
         )
     
     def log(self, msg):
