@@ -1,7 +1,8 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-from rclpy.task import Future
+from std_srvs.srv import SetBool, Trigger
+
 
 import subprocess
 import re
@@ -28,21 +29,22 @@ class StreamListener(Node):
 
         self.log(f'Publishing to topic {topic_name}')
         self._publisher = self.create_publisher(String, topic_name, 10)
-        self._timer = self.create_timer(0.1, self.listen_stream)  # Timer to check the stream
+
+        self._ready = False
+        self.srv = self.create_service(Trigger, 'whisper_ready', self.handle_ready_request)
 
         self.log('Running whisper stream')
-        self._locked = False
+        # We initially ignore all commands until the interpreter node
+        # tells us that we can start listening
+        self._locked = True
         self._listen_stream()
+    
+    def handle_ready_request(self, request, response):
+        response.success = self._ready
+        return response
 
     def log(self, msg):
         self._logger.publish(String(data=f"{self.get_name()}: {msg}"))
-    
-    def listen_stream(self):
-        
-        try:
-            self._listen_stream()
-        except Exception as e:
-            self.log(f'Error when reading stream: {e}')
     
     def _listen_stream(self):
         
@@ -60,6 +62,9 @@ class StreamListener(Node):
             stderr=subprocess.PIPE,
             universal_newlines=True  # This is needed to get a string instead of bytes
         )
+
+        # This will signal to the interpreter node that we are ready
+        self._ready = True
 
         while True:
 
