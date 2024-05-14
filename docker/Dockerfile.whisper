@@ -12,10 +12,10 @@ RUN apt-get update && \
 # Build whisper
 RUN cd /whisper && \
     make clean && \
-    WHISPER_CUBLAS=1 NVFLAGS="-Xcompiler -ansi -Xcompiler -Ofast" make -j stream
+    WHISPER_CUBLAS=1 make -j stream
 
 # Download model
-RUN bash ./models/download-ggml-model.sh small.en-q5_1
+RUN bash ./models/download-ggml-model.sh base.en-q5_1
 
 # Build ROS2 node
 COPY whisper.node/voice_commands /whisper/voice_commands
