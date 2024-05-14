@@ -1,15 +1,15 @@
 [Unit]
 Description=Start George
-Requires=docker.service
-After=docker.service
+Requires=network-online.target docker.service NetworkManager.service
+After=network-online.target docker.service NetworkManager.service
 
 [Service]
 Type=simple
 Restart=always
 RestartSec=10s
 WorkingDirectory=/home/jetbot/george/docker
-ExecStart=/usr/bin/docker-compose up
+ExecStart=/usr/bin/docker-compose up --force-recreate
 ExecStop=/usr/bin/docker-compose down
 
 [Install]
-WantedBy=network-online.target
+WantedBy=default.target
