@@ -52,6 +52,13 @@ class StreamListener(Node):
         self._logger.publish(String(data=f"{self.get_name()}: {msg}"))
     
     def _listen_stream(self):
+
+        # Wait to start process until we are unlocked the first time
+        while True:
+            if self._locked:
+                time.sleep(1)
+            else:
+                break
         
         process = subprocess.Popen(
             [
@@ -101,6 +108,10 @@ class StreamListener(Node):
                     if message.find("BLANK_AUDIO") >= 0:
 
                         self.log('No voice detected')
+                    
+                    elif message.lower().find("go") < 0:
+
+                        self.log('Ignoring: "%s"' % message)
 
                     else:
 
