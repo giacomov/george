@@ -13,11 +13,39 @@ def register_action(func):
     return func
 
 
+class CalibratedRobot(Robot):
+
+    def __init__(self, left_motor_calibration=0.9, right_motor_calibration=1.0, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._left_motor_calibration = left_motor_calibration
+        self._right_motor_calibration = right_motor_calibration
+    
+    def forward(self, speed=1.0, duration=None):
+        self.left_motor.value = speed * self._left_motor_calibration
+        self.right_motor.value = speed * self._right_motor_calibration
+
+    def backward(self, speed=1.0):
+        self.left_motor.value = -speed  * self._left_motor_calibration
+        self.right_motor.value = -speed * self._right_motor_calibration
+ 
+    def left(self, speed=1.0):
+        self.left_motor.value = -speed * self._left_motor_calibration
+        self.right_motor.value = speed * self._right_motor_calibration
+
+    def right(self, speed=1.0):
+        self.left_motor.value = speed * self._left_motor_calibration
+        self.right_motor.value = -speed * self._right_motor_calibration
+
+    def stop(self):
+        self.left_motor.value = 0
+        self.right_motor.value = 0
+
+
 class Navigation:
 
     def __init__(self, speed=0.3, move_time=0.2):
     
-        self._robot = Robot()
+        self._robot = CalibratedRobot()
         self._speed = speed
         self._move_time = move_time
     
