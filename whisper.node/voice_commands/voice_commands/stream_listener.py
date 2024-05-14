@@ -44,6 +44,7 @@ class StreamListener(Node):
             stderr=subprocess.PIPE,
             universal_newlines=True  # This is needed to get a string instead of bytes
         )
+        self._locked = False
     
     def wait_for_topic(self, topic_name):
         future = Future()
@@ -67,7 +68,7 @@ class StreamListener(Node):
         self._logger.publish(String(data=f"{self.get_name()}: {msg}"))
     
     def listen_stream(self):
-
+        
         try:
             self._listen_stream()
         except Exception as e:
@@ -91,8 +92,9 @@ class StreamListener(Node):
                     
                     return
                 
-                self.log('Publishing: "%s"' % message)
-                self._publisher.publish(String(data=message))
+                if not self._locked:
+                    self.log('Publishing: "%s"' % message)
+                    self._publisher.publish(String(data=message))
                 
         else:
             self.log('No line received from stream')
@@ -105,20 +107,13 @@ class StreamListener(Node):
             # The process will be unlocked when the interpreter node will
             # send a message to the locks topic
             self.log("Suspending stream")
-            self._process.send_signal(subprocess.signal.SIGSTOP)
+            self._locked = True
 
         elif msg.data == 'unlocked':
 
             # This resumes the process so we can listen to new commands
             self.log("Resuming stream")
-
-            try:
-                self._process.send_signal(subprocess.signal.SIGCONT)
-            except AttributeError:
-                # The first time this gets called, the process hasnt started yet
-                self.log("Stream not started yet, nothing to do")
-            except Exception as e:
-                self.log(f"Error when resuming stream: {e}")
+            self._locked = False
         
         else:
         
