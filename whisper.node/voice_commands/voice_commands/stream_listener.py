@@ -108,7 +108,12 @@ class StreamListener(Node):
         print("Lock callback")
         # This resumes the process so we can listen to new commands
         self.log("Resuming stream")
-        self._process.send_signal(subprocess.signal.SIGCONT)
+
+        try:
+            self._process.send_signal(subprocess.signal.SIGCONT)
+        except AttributeError:
+            # The first time this gets called, the process hasnt started yet
+            self.log("Stream not started yet, nothing to do")
 
 
 def main(args=None):
