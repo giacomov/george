@@ -83,7 +83,7 @@ class Display:
             self._disp.display()
             time.sleep(0.5)
         
-        text = "HELLO THERE! I AM GEORGE, A VOICE-ACTIVATED LITTLE BOT. SPEAK TO ME AND TELL ME WHAT TO DO!"
+        text = "HELLO THERE! I AM GEORGE"
         self._banner(text)
 
     def _banner(self, text):
@@ -104,7 +104,7 @@ class Display:
         # Set animation and sine wave parameters.
         amplitude = self._height / 4
         offset = self._height / 2 - 4
-        velocity = -3
+        velocity = -6
         startpos = self._width
 
         # Animate text moving in sine wave.
