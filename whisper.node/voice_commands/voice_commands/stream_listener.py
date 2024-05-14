@@ -1,6 +1,8 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
+from rclpy.task import Future
+
 import subprocess
 import re
 
@@ -24,9 +26,10 @@ class StreamListener(Node):
         self._subscription = self.create_subscription(
             String,
             'locks',
-            self.lock_callback,
+            self.lock,
             10
         )
+        self.wait_for_topic('locks')
 
         self.log('Running whisper stream')
         self._process = subprocess.Popen(
@@ -42,6 +45,24 @@ class StreamListener(Node):
             universal_newlines=True  # This is needed to get a string instead of bytes
         )
     
+    def wait_for_topic(self, topic_name):
+        future = Future()
+
+        def msg_callback(msg):
+            future.set_result(msg)
+        
+        temp_sub = self.create_subscription(
+            String,
+            topic_name,
+            msg_callback,
+            10
+        )
+
+        rclpy.spin_until_future_complete(self, future)
+        self.destroy_subscription(temp_sub)
+        self.get_logger().info(f'Topic {topic_name} is now available.')
+
+
     def log(self, msg):
         self._logger.publish(String(data=f"{self.get_name()}: {msg}"))
     
@@ -83,7 +104,7 @@ class StreamListener(Node):
         else:
             self.log('No line received from stream')
     
-    def lock_callback(self, msg):
+    def lock(self, msg):
         print("Lock callback")
         # This resumes the process so we can listen to new commands
         self.log("Resuming stream")
