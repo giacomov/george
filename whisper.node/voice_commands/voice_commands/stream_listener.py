@@ -75,8 +75,7 @@ class StreamListener(Node):
     
     def _listen_stream(self):
         
-        # line = self._process.stdout.readline()
-        line = "go left"
+        line = self._process.stdout.readline()
         
         if line:
 
