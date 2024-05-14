@@ -38,11 +38,17 @@ class Interpreter(Node):
         self._navigation.execute('right')
         
         # Now wait for the whisper node to be ready
+        self.log("one")
         client = self.create_client(Trigger, 'whisper_ready')
+        self.log("two")
 
         while True:
             
+            self.log("three")
+
             if client.wait_for_service(timeout_sec=1.0):
+
+                self.log("four")
             
                 req = Trigger.Request()
             
@@ -58,6 +64,7 @@ class Interpreter(Node):
 
                 else:
 
+                    self.log("Whisper node is not ready")
                     time.sleep(0.5)
             
             self.log('Waiting for whisper node to be ready')
