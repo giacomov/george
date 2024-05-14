@@ -25,7 +25,6 @@ class StreamListener(Node):
             self.lock,
             10
         )
-        self.wait_for_topic('locks')
 
         self.log(f'Publishing to topic {topic_name}')
         self._publisher = self.create_publisher(String, topic_name, 10)
@@ -38,7 +37,7 @@ class StreamListener(Node):
                 '-c', '10', 
                 '-m', '/whisper/models/ggml-tiny.en.bin', 
                 '--step', '0', 
-                '--length', '1000'
+                '--length', '3000'
             ], 
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
