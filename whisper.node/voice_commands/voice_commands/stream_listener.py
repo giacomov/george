@@ -35,17 +35,7 @@ class StreamListener(Node):
 
         # Wait to be unlocked by the interpreter node
         self._locked = True
-        while True:
-
-            if self._locked:
-                self.log('Waiting to be unlocked')
-                time.sleep(1)
-                continue
-
-            self.log('Unlocked. Running whisper stream')
-            # We initially ignore all commands until the interpreter node
-            # tells us that we can start listening
-            self._listen_stream()
+        self._listen_stream()
     
     def handle_ready_request(self, request, response):
         self.log("Received request to check if we are ready")
