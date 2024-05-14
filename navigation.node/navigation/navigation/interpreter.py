@@ -67,7 +67,10 @@ class Interpreter(Node):
         
         # Signal that we are ready to receive messages
         self.log('Unlocking')
-        self._locks.publish(String(data='unlocked'))
+        for _ in range(10):
+            self.log("Publishing unlocked")
+            self._locks.publish(String(data='unlocked'))
+            time.sleep(2)
 
 
 def main(args=None):
