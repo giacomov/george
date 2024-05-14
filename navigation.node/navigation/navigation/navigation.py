@@ -35,7 +35,7 @@ class Navigation:
         if new_speed > 10:
             self._speed = 1
         else:
-            self._speed += new_speed / 10
+            self._speed = new_speed / 10
 
     @register_action
     def stop(self, step=None):
