@@ -12,6 +12,7 @@ services:
     #   interval: 30s
     #   timeout: 5s
     #   retries: 3
+    restart: on-failure
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_LOCALHOST_ONLY=0
@@ -33,6 +34,7 @@ services:
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_LOCALHOST_ONLY=0
+    restart: on-failure
     depends_on:
       - logger
   
@@ -43,6 +45,7 @@ services:
     command: bash -c "source /opt/ros/eloquent/setup.bash && source /whisper/voice_commands/install/setup.bash && ros2 run voice_commands stream_listener"
     devices:
       - /dev/snd:/dev/snd
+    restart: on-failure
     depends_on:
       - logger
       - navigation
