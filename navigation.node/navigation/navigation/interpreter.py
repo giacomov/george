@@ -17,6 +17,7 @@ class Interpreter(Node):
         self._logger = self.create_publisher(String, "chatter", 10)
 
         self._locks = self.create_publisher(String, "locks", 10)
+        self._locks.publish(String(data='unlocked'))
 
         self.subscription = self.create_subscription(
             String,
