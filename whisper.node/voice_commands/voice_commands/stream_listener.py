@@ -50,7 +50,7 @@ class StreamListener(Node):
     def handle_ready_request(self, request, response):
         self.log("Received request to check if we are ready")
         response.success = True
-        response.message = 'Service is ready' if self._ready else 'Service is not ready'
+        response.message = 'Service is ready'
         return response
 
     def log(self, msg):
