@@ -1,4 +1,5 @@
 import concurrent.futures
+import re
 import time
 import rclpy
 from rclpy.node import Node
@@ -96,8 +97,10 @@ class Interpreter(Node):
 
             if action in msg.data.lower():
             
-                self.log(f"Executing: {action}")
-                self.perform_action(action)
+                steps = self.extract_number(msg.data)
+
+                self.log(f"Executing: {action} for {steps} steps")
+                self.perform_action(action, steps)
 
                 break
         
@@ -117,14 +120,45 @@ class Interpreter(Node):
         self.log("Unlocking stream")
         self._locks.publish(String(data='unlocked'))
 
-    def perform_action(self, action):
+    def perform_action(self, action, steps):
         with concurrent.futures.ThreadPoolExecutor() as executor:
             # Submit the display_text and execute methods to be run concurrently
-            future_display = executor.submit(self._display.display_text, action)
-            future_navigation = executor.submit(self._navigation.execute, action)
+            future_display = executor.submit(self._display.display_text, f"{action} {steps}")
+            future_navigation = executor.submit(self._navigation.execute, action, steps)
 
             # wait to complete the movement
             concurrent.futures.wait([future_navigation])
+    
+    @staticmethod
+    def extract_number(s):
+        # Dictionary to map number words to their numeric values
+        number_words = {
+            'one': 1,
+            'two': 2,
+            'three': 3,
+            'four': 4,
+            'five': 5,
+            'six': 6,
+            'seven': 7,
+            'eight': 8,
+            'nine': 9
+        }
+
+        # Normalize the string to lower case
+        s = s.lower()
+
+        # Check for numeric values
+        match = re.search(r'\b([1-9])\b', s)
+        if match:
+            return int(match.group(1))
+
+        # Check for word representations
+        for word, num in number_words.items():
+            if re.search(r'\b' + word + r'\b', s):
+                return num
+
+        # If no number is found, return 1
+        return 1
 
 def main(args=None):
     rclpy.init(args=args)

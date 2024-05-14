@@ -15,15 +15,15 @@ def register_action(func):
 
 class Navigation:
 
-    def __init__(self, speed=0.3, move_time=0.5):
+    def __init__(self, speed=0.3, move_time=0.2):
     
         self._robot = Robot()
         self._speed = speed
         self._move_time = move_time
     
-    def execute(self, action):
+    def execute(self, action, steps=1):
         
-        _ACTIONS[action](self)
+        _ACTIONS[action](self, steps)
 
     @classmethod
     def get_available_actions(cls):
@@ -34,25 +34,25 @@ class Navigation:
         self._robot.stop()
 
     @register_action
-    def forward(self):
+    def forward(self, steps=1):
         self._robot.forward(self._speed)
-        time.sleep(self._move_time)
+        time.sleep(self._move_time * steps)
         self._robot.stop()
     
     @register_action
-    def backward(self):
+    def backward(self, steps=1):
         self._robot.backward(self._speed)
-        time.sleep(self._move_time)
+        time.sleep(self._move_time * steps)
         self._robot.stop()
     
     @register_action
-    def left(self):
+    def left(self, steps=1):
         self._robot.left(self._speed)
-        time.sleep(self._move_time)
+        time.sleep(self._move_time * steps)
         self._robot.stop()
     
     @register_action
-    def right(self):
+    def right(self, steps=1):
         self._robot.right(self._speed)
-        time.sleep(self._move_time)
+        time.sleep(self._move_time * steps)
         self._robot.stop()
