@@ -32,18 +32,18 @@ class StreamListener(Node):
         self._timer = self.create_timer(0.1, self.listen_stream)  # Timer to check the stream
 
         self.log('Running whisper stream')
-        # self._process = subprocess.Popen(
-        #     [
-        #         '/whisper/stream', 
-        #         '-c', '10', 
-        #         '-m', '/whisper/models/ggml-base.en.bin', 
-        #         '--step', '0', 
-        #         '--length', '3000'
-        #     ], 
-        #     stdout=subprocess.PIPE,
-        #     stderr=subprocess.PIPE,
-        #     universal_newlines=True  # This is needed to get a string instead of bytes
-        # )
+        self._process = subprocess.Popen(
+            [
+                '/whisper/stream', 
+                '-c', '10', 
+                '-m', '/whisper/models/ggml-base.en.bin', 
+                '--step', '0', 
+                '--length', '3000'
+            ], 
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True  # This is needed to get a string instead of bytes
+        )
     
     def wait_for_topic(self, topic_name):
         future = Future()
