@@ -114,6 +114,8 @@ class StreamListener(Node):
         except AttributeError:
             # The first time this gets called, the process hasnt started yet
             self.log("Stream not started yet, nothing to do")
+        except Exception as e:
+            self.log(f"Error when resuming stream: {e}")
 
 
 def main(args=None):
