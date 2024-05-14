@@ -36,8 +36,9 @@ class StreamListener(Node):
 
         # Wait to be unlocked by the interpreter node
         self._locked = True
-        
+
         # Start the _listen_stream method in a separate thread
+        # to avoid running into the GIL and blocking the entire node
         self.stream_thread = threading.Thread(target=self._listen_stream)
         self.stream_thread.start()
     
@@ -56,7 +57,7 @@ class StreamListener(Node):
             [
                 '/whisper/stream', 
                 '-c', '10', # microphone channel
-                '-m', '/whisper/models/ggml-tiny.en.bin', 
+                '-m', '/whisper/models/ggml-large.en.bin', 
                 '--step', '0',
                 '--keep', '0',
                 '--length', '3000',
