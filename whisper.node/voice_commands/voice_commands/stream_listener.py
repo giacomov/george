@@ -31,39 +31,8 @@ class StreamListener(Node):
         self._timer = self.create_timer(0.1, self.listen_stream)  # Timer to check the stream
 
         self.log('Running whisper stream')
-        self._process = subprocess.Popen(
-            [
-                '/whisper/stream', 
-                '-c', '10', # microphone channel
-                '-m', '/whisper/models/ggml-tiny.en.bin', 
-                '--step', '0',
-                '--keep', '0',
-                '--length', '3000',
-                '--threads', '2'
-            ], 
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True  # This is needed to get a string instead of bytes
-        )
         self._locked = False
-    
-    def wait_for_topic(self, topic_name):
-        future = Future()
-
-        def msg_callback(msg):
-            future.set_result(msg)
-        
-        temp_sub = self.create_subscription(
-            String,
-            topic_name,
-            msg_callback,
-            10
-        )
-
-        rclpy.spin_until_future_complete(self, future)
-        self.destroy_subscription(temp_sub)
-        self.log(f'Topic {topic_name} is now available.')
-
+        self._listen_stream()
 
     def log(self, msg):
         self._logger.publish(String(data=f"{self.get_name()}: {msg}"))
@@ -77,29 +46,62 @@ class StreamListener(Node):
     
     def _listen_stream(self):
         
-        line = self._process.stdout.readline()
-        
-        if line:
+        process = subprocess.Popen(
+            [
+                '/whisper/stream', 
+                '-c', '10', # microphone channel
+                '-m', '/whisper/models/ggml-tiny.en.bin', 
+                '--step', '0',
+                '--keep', '0',
+                '--length', '3000',
+                '--threads', '2'
+            ], 
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True  # This is needed to get a string instead of bytes
+        )
 
-            match = re.search(r'\[\d\d:\d\d\.\d\d\d --> \d\d:\d\d\.\d\d\d\]\s+(.*)', line.strip())
-        
-            if match:
-                
-                message = match.group(1)
-                
-                if message.find("BLANK_AUDIO") >= 0:
+        while True:
 
-                    self.log('No voice detected')
+            try:
+                line = process.stdout.readline()
+            except Exception as e:
+                self.log(f"Error when reading line from stream: {e}. Will try continuing")
+                continue
+            
+            if line == '' and process.poll() is not None:
+                # Process is done
+                remaining_output, remaining_errors = process.communicate()
+                
+                if remaining_output:
+                
+                    self.log(f"Stream ended with msg: {remaining_output.strip()}")
+                
+                if remaining_errors:
+
+                    self.log(f"Stream ended with error: {remaining_errors.strip()}")
+                
+                return
+
+            if line:
+
+                match = re.search(r'\[\d\d:\d\d\.\d\d\d --> \d\d:\d\d\.\d\d\d\]\s+(.*)', line.strip())
+            
+                if match:
                     
-                    return
-                
-                if not self._locked:
-                    self.log('Publishing: "%s"' % message)
-                    self._publisher.publish(String(data=message))
-                
-        else:
-            self.log('No line received from stream')
-    
+                    message = match.group(1)
+                    
+                    if message.find("BLANK_AUDIO") >= 0:
+
+                        self.log('No voice detected')
+
+                    else:
+
+                        if not self._locked:
+
+                            self.log('Publishing: "%s"' % message)
+                            self._publisher.publish(String(data=message))
+                            
     def lock(self, msg):
 
         if msg.data == 'locked':
