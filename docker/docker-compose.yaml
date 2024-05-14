@@ -17,16 +17,6 @@ services:
     environment:
       - ROS_DOMAIN_ID=0
       - ROS_LOCALHOST_ONLY=0
-  
-  whisper:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile.whisper    
-    command: bash -c "source /opt/ros/eloquent/setup.bash && source /whisper/voice_commands/install/setup.bash && ros2 run voice_commands stream_listener"
-    devices:
-      - /dev/snd:/dev/snd
-    depends_on:
-      - logger
 
   # talker:
   #   build:
@@ -62,6 +52,17 @@ services:
       - whisper
       - logger
   
+  whisper:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.whisper    
+    command: bash -c "source /opt/ros/eloquent/setup.bash && source /whisper/voice_commands/install/setup.bash && ros2 run voice_commands stream_listener"
+    devices:
+      - /dev/snd:/dev/snd
+    depends_on:
+      - logger
+      - navigation
+
   # check:
   #   build:
   #     context: .
