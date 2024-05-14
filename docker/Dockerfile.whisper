@@ -15,7 +15,7 @@ RUN cd /whisper && \
     WHISPER_CUBLAS=1 make -j stream
 
 # Download model
-RUN bash ./models/download-ggml-model.sh base.en-q5_1
+RUN bash ./models/download-ggml-model.sh tiny.en-q5_1
 
 # Build ROS2 node
 COPY whisper.node/voice_commands /whisper/voice_commands
