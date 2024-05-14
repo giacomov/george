@@ -1,3 +1,4 @@
+import threading
 import time
 import rclpy
 from rclpy.node import Node
@@ -35,7 +36,10 @@ class StreamListener(Node):
 
         # Wait to be unlocked by the interpreter node
         self._locked = True
-        self._listen_stream()
+        
+        # Start the _listen_stream method in a separate thread
+        self.stream_thread = threading.Thread(target=self._listen_stream)
+        self.stream_thread.start()
     
     def handle_ready_request(self, request, response):
         self.log("Received request to check if we are ready")
