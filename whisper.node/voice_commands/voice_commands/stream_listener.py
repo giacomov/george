@@ -36,9 +36,9 @@ class StreamListener(Node):
             [
                 '/whisper/stream', 
                 '-c', '10', 
-                '-m', '/whisper/models/ggml-base.en.bin', 
+                '-m', '/whisper/models/ggml-tiny.en.bin', 
                 '--step', '0', 
-                '--length', '3000'
+                '--length', '1000'
             ], 
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
