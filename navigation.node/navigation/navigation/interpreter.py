@@ -1,4 +1,4 @@
-import time
+import concurrent.futures
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
@@ -50,11 +50,10 @@ class Interpreter(Node):
 
         for action in self._available_actions:
 
-            if action in msg.data:
+            if action in msg.data.lower():
             
                 self.log(f"Executing: {action}")
-
-                self._navigation.execute(action)
+                self.perform_action(action)
 
                 break
         
@@ -66,7 +65,15 @@ class Interpreter(Node):
         # Signal that we are ready to receive messages
         self.log("Unlocking stream")
         self._locks.publish(String(data='unlocked'))
+    
+    def perform_action(self, action):
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            # Submit the display_text and execute methods to be run concurrently
+            future_display = executor.submit(self._display.display_text, action)
+            future_navigation = executor.submit(self._navigation.execute, action)
 
+            # Optionally, you can wait for both operations to complete if needed
+            concurrent.futures.wait([future_display, future_navigation])
 
 def main(args=None):
     rclpy.init(args=args)
