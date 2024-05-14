@@ -109,7 +109,7 @@ class StreamListener(Node):
 
                         self.log('No voice detected')
                     
-                    elif message.lower().find("go") < 0:
+                    elif message.lower().find("go") < 0 and message.lower().find("set"):
 
                         self.log('Ignoring: "%s"' % message)
 

@@ -28,9 +28,17 @@ class Navigation:
     @classmethod
     def get_available_actions(cls):
         return list(_ACTIONS.keys())
+    
+    @register_action
+    def speed(self, new_speed=3):
+
+        if new_speed > 10:
+            self._speed = 1
+        else:
+            self._speed += new_speed / 10
 
     @register_action
-    def stop(self):
+    def stop(self, step=None):
         self._robot.stop()
 
     @register_action

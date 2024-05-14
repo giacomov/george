@@ -33,33 +33,19 @@ class Interpreter(Node):
         self._available_actions = Navigation.get_available_actions()
 
         self.log('Interpreter node started')
-
-        # Signal that we are alive
-        self._navigation.execute('left')
-        self._navigation.execute('right')
         
         # Now wait for the whisper node to be ready
-        self.log("one")
         client = self.create_client(Trigger, 'whisper_ready')
-        self.log("two")
 
         while True:
             
-            self.log("three")
-
             if client.wait_for_service(timeout_sec=1.0):
-
-                self.log("four")
             
                 req = Trigger.Request()
-
-                self.log("five")
             
                 future = client.call_async(req)
             
                 rclpy.spin_until_future_complete(self, future)
-
-                self.log("six")
             
                 if future.result() is not None and future.result().success:
             
@@ -77,6 +63,11 @@ class Interpreter(Node):
         
         self._display = Display()
         self._display.welcome()
+
+        # Signal that we are alive
+        self._navigation.execute('left')
+        self._navigation.execute('right')
+
         self._unlock_voice_commands()
     
     def handle_ready_request(self, request, response):
@@ -97,17 +88,17 @@ class Interpreter(Node):
 
             if action in msg.data.lower():
             
-                steps = self.extract_number(msg.data)
+                number = self.extract_number(msg.data)
 
-                self.log(f"Executing: {action} for {steps} steps")
-                self.perform_action(action, steps)
+                self.log(f"Executing: {action} with parameter {number}")
+                self.perform_action(action, number)
 
                 break
         
         else:
 
             self.log(f"Action not recognized. Available actions: {self._available_actions}")
-            self._display.display_text("??")
+            self.perform_action(None, None)
         
         # Signal that we are ready to receive messages
         self._unlock_voice_commands()
@@ -122,9 +113,14 @@ class Interpreter(Node):
 
     def perform_action(self, action, steps):
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            # Submit the display_text and execute methods to be run concurrently
-            future_display = executor.submit(self._display.display_text, f"{action} {steps}")
-            future_navigation = executor.submit(self._navigation.execute, action, steps)
+
+            if action is None:
+                future_display = executor.submit(self._display.display_text, "??")
+                future_navigation = executor.submit(self._navigation.execute, "stop", 1)
+            else:
+                # Submit the display_text and execute methods to be run concurrently
+                future_display = executor.submit(self._display.display_text, f"{action} {steps}")
+                future_navigation = executor.submit(self._navigation.execute, action, steps)
 
             # wait to complete the movement
             concurrent.futures.wait([future_navigation])
