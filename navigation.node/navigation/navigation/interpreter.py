@@ -72,8 +72,8 @@ class Interpreter(Node):
             future_display = executor.submit(self._display.display_text, action)
             future_navigation = executor.submit(self._navigation.execute, action)
 
-            # Optionally, you can wait for both operations to complete if needed
-            concurrent.futures.wait([future_display, future_navigation])
+            # wait to complete the movement
+            concurrent.futures.wait([future_navigation])
 
 def main(args=None):
     rclpy.init(args=args)

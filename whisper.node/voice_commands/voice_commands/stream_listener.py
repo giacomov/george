@@ -34,10 +34,12 @@ class StreamListener(Node):
         self._process = subprocess.Popen(
             [
                 '/whisper/stream', 
-                '-c', '10', 
+                '-c', '10', # microphone channel
                 '-m', '/whisper/models/ggml-tiny.en.bin', 
-                '--step', '0', 
-                '--length', '3000'
+                '--step', '0',
+                '--keep', '0',
+                '--length', '3000',
+                '--threads', '2'
             ], 
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
