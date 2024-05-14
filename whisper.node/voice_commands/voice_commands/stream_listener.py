@@ -77,11 +77,15 @@ class StreamListener(Node):
 
         while True:
 
+            self.log("Reading line")
+
             try:
                 line = process.stdout.readline()
             except Exception as e:
                 self.log(f"Error when reading line from stream: {e}. Will try continuing")
                 continue
+
+            self.log(f"Got line {line}")
             
             if line == '' and process.poll() is not None:
                 # Process is done
