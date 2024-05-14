@@ -12,7 +12,7 @@ class StreamListener(Node):
     def __init__(self, topic_name='voice_commands'):
         super().__init__('stream_listener')
 
-        self._logger = self.create_publisher(String, "chatter", 100)
+        self._logger = self.create_publisher(String, "chatter", 10)
 
         self.log('Stream Listener node started')
         
@@ -60,7 +60,7 @@ class StreamListener(Node):
 
         rclpy.spin_until_future_complete(self, future)
         self.destroy_subscription(temp_sub)
-        self.get_logger().info(f'Topic {topic_name} is now available.')
+        self.log(f'Topic {topic_name} is now available.')
 
 
     def log(self, msg):
