@@ -46,7 +46,7 @@ class Interpreter(Node):
             
                 req = Trigger.Request()
             
-                future = self.client.call_async(req)
+                future = client.call_async(req)
             
                 rclpy.spin_until_future_complete(self, future)
             
