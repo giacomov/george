@@ -40,6 +40,7 @@ class StreamListener(Node):
         self._listen_stream()
     
     def handle_ready_request(self, request, response):
+        self.log("Received request to check if we are ready")
         response.success = self._ready
         return response
 
