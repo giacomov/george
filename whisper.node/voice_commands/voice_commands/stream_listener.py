@@ -57,7 +57,7 @@ class StreamListener(Node):
             [
                 '/whisper/stream', 
                 '-c', '10', # microphone channel
-                '-m', '/whisper/models/ggml-large.en.bin', 
+                '-m', '/whisper/models/ggml-small.en-q5_1.bin', 
                 '--step', '0',
                 '--keep', '0',
                 '--length', '3000',

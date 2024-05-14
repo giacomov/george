@@ -15,7 +15,7 @@ RUN cd /whisper && \
     WHISPER_CUBLAS=1 NVFLAGS="-Xcompiler -ansi -Xcompiler -Ofast" make -j stream
 
 # Download model
-RUN bash ./models/download-ggml-model.sh large.en
+RUN bash ./models/download-ggml-model.sh small.en-q5_1
 
 # Build ROS2 node
 COPY whisper.node/voice_commands /whisper/voice_commands
