@@ -51,10 +51,14 @@ class Interpreter(Node):
                 self.log("four")
             
                 req = Trigger.Request()
+
+                self.log("five")
             
                 future = client.call_async(req)
             
                 rclpy.spin_until_future_complete(self, future)
+
+                self.log("six")
             
                 if future.result() is not None and future.result().success:
             
