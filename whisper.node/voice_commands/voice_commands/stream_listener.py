@@ -84,6 +84,7 @@ class StreamListener(Node):
             self.log('No line received from stream')
     
     def lock_callback(self, msg):
+        print("Lock callback")
         # This resumes the process so we can listen to new commands
         self.log("Resuming stream")
         self._process.send_signal(subprocess.signal.SIGCONT)
