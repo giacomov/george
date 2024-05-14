@@ -50,6 +50,9 @@ class Interpreter(Node):
 
         self.log(f'Received: {msg.data}')
         
+        self.log("Locking stream")
+        self._locks.publish(String(data='locked'))
+
         for action in self._available_actions:
 
             if action in msg.data:
@@ -66,11 +69,8 @@ class Interpreter(Node):
             self._display.display_text("??")
         
         # Signal that we are ready to receive messages
-        self.log('Unlocking')
-        for _ in range(10):
-            self.log("Publishing unlocked")
-            self._locks.publish(String(data='unlocked'))
-            time.sleep(2)
+        self.log("Unlocking stream")
+        self._locks.publish(String(data='unlocked'))
 
 
 def main(args=None):

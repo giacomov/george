@@ -32,18 +32,18 @@ class StreamListener(Node):
         self._timer = self.create_timer(0.1, self.listen_stream)  # Timer to check the stream
 
         self.log('Running whisper stream')
-        self._process = subprocess.Popen(
-            [
-                '/whisper/stream', 
-                '-c', '10', 
-                '-m', '/whisper/models/ggml-base.en.bin', 
-                '--step', '0', 
-                '--length', '3000'
-            ], 
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True  # This is needed to get a string instead of bytes
-        )
+        # self._process = subprocess.Popen(
+        #     [
+        #         '/whisper/stream', 
+        #         '-c', '10', 
+        #         '-m', '/whisper/models/ggml-base.en.bin', 
+        #         '--step', '0', 
+        #         '--length', '3000'
+        #     ], 
+        #     stdout=subprocess.PIPE,
+        #     stderr=subprocess.PIPE,
+        #     universal_newlines=True  # This is needed to get a string instead of bytes
+        # )
     
     def wait_for_topic(self, topic_name):
         future = Future()
@@ -75,7 +75,8 @@ class StreamListener(Node):
     
     def _listen_stream(self):
         
-        line = self._process.stdout.readline()
+        # line = self._process.stdout.readline()
+        line = "go left"
         
         if line:
 
@@ -91,13 +92,6 @@ class StreamListener(Node):
                     
                     return
                 
-                # Pause process so we don't get any more inputs and we don't listen
-                # to the noise of the motors while a command is being executed
-                # The process will be unlocked when the interpreter node will
-                # send a message to the locks topic
-                self.log("Suspending stream")
-                self._process.send_signal(subprocess.signal.SIGSTOP)
-
                 self.log('Publishing: "%s"' % message)
                 self._publisher.publish(String(data=message))
                 
@@ -105,17 +99,31 @@ class StreamListener(Node):
             self.log('No line received from stream')
     
     def lock(self, msg):
-        print("Lock callback")
-        # This resumes the process so we can listen to new commands
-        self.log("Resuming stream")
 
-        try:
-            self._process.send_signal(subprocess.signal.SIGCONT)
-        except AttributeError:
-            # The first time this gets called, the process hasnt started yet
-            self.log("Stream not started yet, nothing to do")
-        except Exception as e:
-            self.log(f"Error when resuming stream: {e}")
+        if msg.data == 'locked':
+            # Pause process so we don't get any more inputs and we don't listen
+            # to the noise of the motors while a command is being executed
+            # The process will be unlocked when the interpreter node will
+            # send a message to the locks topic
+            self.log("Suspending stream")
+            self._process.send_signal(subprocess.signal.SIGSTOP)
+
+        elif msg.data == 'unlocked':
+
+            # This resumes the process so we can listen to new commands
+            self.log("Resuming stream")
+
+            try:
+                self._process.send_signal(subprocess.signal.SIGCONT)
+            except AttributeError:
+                # The first time this gets called, the process hasnt started yet
+                self.log("Stream not started yet, nothing to do")
+            except Exception as e:
+                self.log(f"Error when resuming stream: {e}")
+        
+        else:
+        
+            self.log(f"Unknown message on locks: {msg.data}")
 
 
 def main(args=None):
